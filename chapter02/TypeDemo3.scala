@@ -9,6 +9,8 @@ object TypeDemo3 {
 
   var num1:Float =2.23456789f
   var num2:Double=2.23456789
+  //var num3:Float=2.1 报错
+  var e =9999999999999l   //(指定为Long类型)
   println(num1+"---"+num2)
 
 }
