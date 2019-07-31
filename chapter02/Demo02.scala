@@ -4,7 +4,7 @@
 object Demo02 {
 
   def main(args: Array[String]) {
-//20190730 11
+//20190730 11 aa
 //强制类型转换
 
     val num1:Int=10*3.5.toInt+6*1.5.toInt
