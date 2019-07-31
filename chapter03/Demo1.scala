@@ -4,7 +4,7 @@
 object Demo1 {
   def main(args: Array[String]) {
 
-//11
+//11 22
 
 //  ++ 和--
 //在scala中没有++ 和-- 只有+=1 和-=1
