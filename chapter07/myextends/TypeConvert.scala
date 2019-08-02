@@ -10,7 +10,7 @@ object TypeConvert {
     println(s.getClass.getName)*/
   var p1: Person = new Person
     var emp: Emp = new Emp
-
+//
     p1=emp
 
     val emp1: Emp = p1.asInstanceOf[Emp]
