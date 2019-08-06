@@ -20,6 +20,6 @@ object ImplicitDemo01 {
     val num:Int=3.5
     var num2:Int=4.5f
   println("num="+num)
-    println("num2="+num2)
+    println("num2="+num2  )
   }
 }
