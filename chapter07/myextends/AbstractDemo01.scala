@@ -6,6 +6,15 @@ package myextends
 object AbstractDemo01 {
   def main(args: Array[String]) {
     println("xxx")
+
+
+    val animal = new Animal {
+      override var name: String = _
+      override var age: Int = _
+
+      override def cry(): Unit = ???
+    }
+    animal.cry()
   }
 }
 abstract class Animal{
