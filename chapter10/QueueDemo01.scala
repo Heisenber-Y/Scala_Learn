@@ -11,7 +11,7 @@ object QueueDemo01 {
 println("q1="+q1)
     q1++=List(4,5,7)
     println("q1="+q1)
-//dequeue
+//dequeue  20190807
 
   }
 }
