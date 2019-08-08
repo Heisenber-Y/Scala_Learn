@@ -170,7 +170,7 @@
 3. obj.isInstanceOf[T]就如同 Java 的 obj instanceof T 判断 obj 是不是 T 类型
 4. obj.asInstanceOf[T]就如同 Java 的(T)obj 将 obj 强转成 T 类型。
 
-###7.6.9Scala 中超类的构造
+###7.6.9Scala 中超类的构造 1
 1. 
 2. 
 3. 
