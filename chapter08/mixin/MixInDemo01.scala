@@ -6,6 +6,8 @@ package mixin
 object MixInDemo01 {
   def main(args: Array[String]) {
 //在不修改类的定义基础上，可以使用trait方法
+
+  //动态混入
   val oracleDB= new OracleDB with Operate3
   oracleDB.insert(100)
 
@@ -17,6 +19,7 @@ object MixInDemo01 {
         println("say jihoh")
       }
     }
+
 mysql_.insert(999)
     mysql_.sayhi()
     

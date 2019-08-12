@@ -7,6 +7,8 @@ import com.sun.corba.se.impl.encoding.IDLJavaSerializationInputStream
   */
 object Addtrait {
   def main(args: Array[String]) {
+
+    //构建对象的同时如果混入多个特质，称之为叠加特质，那么特质声明顺序从左到右，方法执行顺序 从右到左
      val mysql= new Mysql4 with  DB4 with File4
    // println(mysql)
     mysql.insert(100)
