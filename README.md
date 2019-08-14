@@ -465,15 +465,143 @@
 2. 运算时，集合对象一定要放置在最右边，
 3. 运算规则，从右向左。
 4. ::: 运算符是将集合中的每一个元素加入到集合中去
+5. 通过 :+ 和 +: 给 list 追加元素(本身的集合并没有变化)
+6.  :+运算符表示在列表的最后增加数据
+7. +:运算符表示在列表的最前增加数据
+
+
 
 ##10.13ListBuffer
 ###10.13.1 基本介绍
 1. ListBuffer 是可变的 list 集合，可以添加，删除元素,ListBuffer 属于序列
 
-
 ##10.14队列 Queue-基本介绍
+###10.14.2 队列的说明
+1. 队列是一个有序列表，在底层可以用数组或是链表来实现。
+2. 其输入和输出要遵循先入先出的原则。即:先存入队列的数据，要先取出。后存入的要后取
+3. 在 Scala 中，由设计者直接给我们提供队列类型 Queue 使用。
+4. 在 scala 中, 有 scala.collection.mutable.Queue 和 scala.collection.immutable.Queue , 
+    一般来说，我们在开发中通常使用可变集合中的队列
+    
+###10.15队列 Queue-队列的创建    
+1. val q1 = new mutable.Queue[Int]
+
+##10.17队列 Queue-删除和加入队列元素
+1. 在队列中，严格的遵守，入队列的数据，放在队位，出队列的数据是队列的头部取出.
+2. dequeue 从队列的头部取出元素 q1 本身会变
+3. enQueue 入队列，默认是从队列的尾部加入. Redis
+
+##10.18队列 Queue-返回队列的元素
+1. 获取队列的第一个元素 q1.head) // 4, 对 q1 没有任何影响
+2. 获取队列的最后一个元素 q1.last) // 888, 对 q1 没有任何影响
+3. 取出队尾的数据 ,即:返回除了第一个以外剩余的元素，可以级联使用 q1.tail.tail.tail.tail
+4.     
+
+##10.19映射 Map-基本介绍
+ ###10.19.1 Java 中的 Map 回顾
+1. HashMap 是一个散列表(数组+链表)，它存储的内容是键值对(key-value)映射，
+    Java 中的 HashMap 是无序的，key 不能重复。
+###10.19.3 Scala 中的 Map 介绍
+1. Scala 中的 Map 和 Java 类似，也是一个散列表，它存储的内容也是键值对(key-value)映射，
+    Scala 中不可变的 Map 是有序的，可变的 Map 是无序的
+2. Scala 中 ， 有 可 变 Map (scala.collection.mutable.Map) 和
+    不 可 变 Map(scala.collection.immutable.Map)
+
+##10.20映射 Map-构建 Map
+###10.20.1 方式 1-构造不可变映射
+1. Scala 中的不可变 Map 是有序，构建 Map 中的元素底层是 Tuple2 类型。
+2. 默认 Map 是 immutable.Map
+3. key-value 类型支持 Any
+4. 在 Map 的底层，每对 key-value 是 Tuple2
+5. 从输出的结果看到，输出顺序和声明顺序一致
+
+##10.21映射 Map-构建 Map
+###10.21.3 方式 3-创建空的映射
+1. val map3 = new scala.collection.mutable.HashMap[String, Int]
+
+###10.21.4 方式 4-对偶元组
+1. 即创建包含键值对的二元组， 和第一种方式等价，只是形式上不同而已
+2. 对偶元组 就是只含有两个数据的元组。
 
 
+##10.22映射 Map-取值 
+###10.22.1 方式 1-使用 map(key)
+1. 如果 key 存在，则返回对应的值
+2. 如果 key 不存在，则抛出异常[java.util.NoSuchElementException]
+3. 在 Java 中,如果 key 不存在则返回 null
+
+###10.22.2 方式 2-使用 contains 方法检查是否存在 key
+1. 返回 Boolean
+2. 如果 key 存在，则返回 true
+3. 如果 key 不存在，则返回 false
+4. 使用 containts 先判断在取值，可以防止异常，并加入相应的处理逻辑
+
+###10.22.3 方式 3-使用 map.get(key).get 取值
+1. 通过 映射.get(键) 这样的调用返回一个 Option 对象，要么是 Some，要么是 None
+2. map.get方法会将数据进行包装
+3. 如果 map.get(key) key 存在返回 some,如果 key 不存在，则返回 None
+4. 如果 map.get(key).get key 存在，返回 key 对应的值 , 否则，抛出异常
+   java.util.NoSuchElementException: None.get
+   
+
+###10.22.4 方式 4-使用 map4.getOrElse()取值
+1. getOrElse 方法 : def getOrElse[V1 >: V](key: K, default: => V1)
+2. 如果 key 存在，返回 key 对应的值
+3. 如果 key 不存在，返回默认值。在 java 中底层有很多类似的操作
+
+
+###10.22.5 如何选择取值的方式
+1. 如果我们确定 map 有这个 key ,则应当使用 map(key), 速度快
+2. 如果我们不能确定 map 是否有 key ,而且有不同的业务逻辑，使用 map.contains() 先判断在加入逻辑
+3. 如果只是简单的希望得到一个值，使用 map4.getOrElse("ip","127.0.0.1")
+
+###10.23映射 Map-对 map 修改、添加和删除
+### 10.23.1 更新 map 的元素
+1. val map5 = mutable.Map( ("A", 1), ("B", "北京"), ("C", 3) )  map5("A") = 20 //增加
+2. map 是可变的，才能修改，否则报错
+3. 如果 key 存在:则修改对应的值,key 不存在,等价于添加一个 key-val
+
+
+###10.23.3 删除 map 元素
+1. map5 -= ("A","B","AAA")
+2. "A","B" 就是要删除的 key, 可以写多个.
+3. 如果 key 存在，就删除，如果 key 不存在，也不会报错.
+
+##10.24映射 Map-对 map 遍历
+```scala
+//对 map 的元素(元组 Tuple2 对象 )进行遍历的方式很多，具体如下 val map1 = mutable.Map( ("A", 1), ("B", "北京"), ("C", 3) )
+for ((k, v) <- map1) println(k + " is mapped to " + v)
+for (v <- map1.keys) println(v)
+for (v <- map1.values) println(v)
+for(v <- map1) println(v) //v 是 Tuple?
+```
+1. 每遍历一次，返回的元素是 Tuple2
+2. 取出的时候，可以按照元组的方式来取
+
+##10.25集 Set-基本介绍
+1. 集是不重复元素的结合。集不保留顺序，默认是以哈希集实现
+
+###10.25.1 Java 中 Set 的回顾
+1. java 中，HashSet 是实现 Set<E>接口的一个实体类，数据是以哈希表的形式存放的，里面的不能包
+   含重复数据。Set 接口是一种不包含重复元素的 collection，HashSet 中的数据也是没有顺序的
+2. 默认情况下，Scala 使用的是不可变集合，如果你想使用可变集合，需要引用 scala.collection.mutable.Set 包
+
+##10.27集 Set-可变集合的元素添加和删除 
+###10.27.1 可变集合的元素添加
+```scala
+mutableSet.add(4) //方式 1
+mutableSet += 6 //方式 2 
+ mutableSet.+=(5) //方式 3
+```
+1. 说明:如果添加的对象已经存在，则不会重复添加，也不会报错
+
+###10.27.2 可变集合的元素删除
+```scala
+val set02 = mutable.Set(1,2,4,"abc")
+set02 -= 2 // 操作符形式
+set02.remove("abc") // 方法的形式，scala 的 Set 可以直接删除值
+```
+1. 说明:说明:如果删除的对象不存在，则不生效，也不会报错
 
 
 
