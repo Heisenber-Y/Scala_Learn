@@ -430,6 +430,48 @@
     每个一维数组中有四个元素
     赋值:arr(1)(1) = 11.11
         
+##10.6 数组-Scala 数组与 Java 的 List 的互转
+
+##10.7 元组 Tuple-元组的基本使用
+###10.7.1 基本介绍
+1. 元组也是可以理解为一个容器，可以存放各种相同或不同类型的数据。
+2. 注意:元组中最大只能有 22 个元素
+
+##10.8 元组 Tuple-元组数据的访问
+###10.8.1 基本介绍
+1. 访问元组中的数据,可以采用顺序号(_顺序号)，也可以通过索引(productElement)访问。
+
+##10.10列表 List-创建 List
+1. Scala 中的 List 和 Java List 不一样，在 Java 中 List 是一个接口，
+    真正存放数据是 ArrayList，而 Scala 的 List 可以直接存放数据，就是一个 object，
+    默认情况下 Scala 的 List 是不可变的，List 属于序列 Seq。
+2. 在默认情况下 List 是 scala.collection.immutable.List,即不可变
+3. 在 scala 中,List 就是不可变的，如需要使用可变的 List,则使用 ListBuffer
+4. List 在 package object scala 做了 val List = scala.collection.immutable.List
+5. val Nil = scala.collection.immutable.Nil // List()
+
+###10.10.3 创建 List 的应用案例小结
+1. List默认为不可变的集合
+2. List 在 scala 包对象声明的,因此不需要引入其它包也可以使用
+    val List = scala.collection.immutable.List
+3. List 中可以放任何数据类型，比如 arr1 的类型为 List[Any]
+4. 如果希望得到一个空列表，可以使用 Nil 对象, 在 scala 包对象声明的,因此不需要引入其它包也
+   可以使用
+   val Nil = scala.collection.immutable.Nil
+
+
+###10.12.4 方式 3-在列表的最后增加数据
+1. 符号::表示向集合中 新建集合添加元素。
+2. 运算时，集合对象一定要放置在最右边，
+3. 运算规则，从右向左。
+4. ::: 运算符是将集合中的每一个元素加入到集合中去
+
+##10.13ListBuffer
+###10.13.1 基本介绍
+1. ListBuffer 是可变的 list 集合，可以添加，删除元素,ListBuffer 属于序列
+
+
+##10.14队列 Queue-基本介绍
 
 
 
