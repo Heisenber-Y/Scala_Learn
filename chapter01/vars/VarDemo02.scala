@@ -30,7 +30,7 @@ object VarDemo02 {
 
     val dog = new Dog
     //dog = new Dog //Reassignment to val
-    dog.age = 90 //ok
+    //dog.age = 90 //ok
 
     dog.name = "小花" //ok
 
