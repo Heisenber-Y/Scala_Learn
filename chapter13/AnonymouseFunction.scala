@@ -17,3 +17,4 @@ println("triple"+triple1(3))
 
   }
 }
+

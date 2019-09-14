@@ -603,14 +603,569 @@ set02.remove("abc") // 方法的形式，scala 的 Set 可以直接删除值
 ```
 1. 说明:说明:如果删除的对象不存在，则不生效，也不会报错
 
+#11.1 集合元素的映射-map 映射操作
+
+##11.1.2 map 映射操作
+```scala
+def main(args: Array[String]): Unit = {
+//使用高阶函数
+val res = test(sum2 _, 3.5) println("res=" + res)
+//在 scala 中，可以把一个函数直接赋给一个变量,但是不执行函数 val f1 = myPrint _
+f1() //执行
+
+}
+def myPrint(): Unit = { println("hello,world!")
+}
+```
+###
+1. 说明
+2. test 就是一个高阶函数
+3. f: Double => Double 表示一个函数， 该函数可以接受一个 Double,返回 Double //3. n1: Double 普通参数
+4. f(n1) 在 test 函数中，执行 你传入的函数
+5. //在 scala 中，可以把一个函数直接赋给一个变量,但是不执行函数 val f1 = myPrint _
+   f1() //执行
+
+
+
+###11.1.6 使用 map 映射函数来解决
+```scala
+val list = List(3,5,7,9)
+//说明 list.map(multiple) 做了什么
+//1. 将 list 这个集合的元素 依次遍历
+//2. 将各个元素传递给 multiple 函数 => 新 Int //3. 将得到新 Int ,放入到一个新的集合并返回 //4. 因此 multiple 函数调用 3
+val list2 = list.map(multiple)
+println("list2=" + list2) //List(6,10,14)
+def multiple(n:Int): Int = { println("multiple 被调用~~") 2*n
+}
+
+```
+
+    
+ ###11.1.9 flatmap 映射:flat 即压扁，压平，扁平化映射
+
+####扁平化说明
+1. flatmap:flat 即压扁，压平，扁平化，效果就是将集合中的每个元素的子元素映射到某个函数并返
+   回新的集合
+###11.2 集合元素的过滤-filter
+1. filter:将符合要求的数据(筛选)放置到新的集合中
+```scala
+def main(args: Array[String]): Unit = {
+/*
+选出首字母为 A 的元素
+*/
+val names = List("Alice", "Bob", "Nick") val names2 = names.filter(startA) println("names=" + names) println("names2=" + names2)
+}
+def startA(str:String): Boolean = { str.startsWith("A")
+}
+```   
+
+##11.3 化简
+1. 化简:将二元函数引用于集合中的函数,
+###11.3.4 对 reduceLeft 的运行机制的说明
+1) def reduceLeft[B >: A](@deprecatedName('f) op: (B, A) => B): B
+2) reduceLeft(f) 接收的函数需要的形式为 op: (B, A) => B): B
+3) reduceleft(f) 的运行规则是 从左边开始执行将得到的结果返回给第一个参数 4) 然后继续和下一个元素运行，将得到的结果继续返回给第一个参数，继续..
+即://((((1+2) +3)+4)+5)=15
+
+###11.4.1 基本介绍
+1. fold函数将上一步返回的值作为函数的第一个参数继续传递参与运算，直到list中的所有元素被遍 历
+2. 可以把 reduceLeft 看做简化版的 foldLeft。
+3. 如何理解:
+   def reduceLeft[B >: A](@deprecatedName('f) op: (B, A) => B): B =
+   if (isEmpty) throw new UnsupportedOperationException("empty.reduceLeft") else tail.foldLeft[B](head)(op)
+   大家可以看到. reduceLeft 就是调用的 foldLeft[B](head)，并且是默认从集合的 head 元素开始操作的
+   
+   
+###11.5.1 基本介绍
+1. 扫描，即对某个集合的所有元素做 fold 操作，但是会把产生的所有中间结果放置于一个集合中保 存
+```scala
+var i6 = (1 /: list4) (minus) // =等价=> list4.foldLeft(1)(minus) println("i6=" + i6)
+i6 = (100 /: list4) (minus) //=等价=> list4.foldLeft(100)(minus) println(i6) // 输出?
+i6 = (list4 :\ 10) (minus) // list4.foldRight(10)(minus) println(i6) // 输出? 2
+```   
+ 
+ 
+##11.7 扩展-拉链(合并)
+###11.7.1 基本介绍
+1. 拉链的本质就是两个集合的合并操作，合并后每个元素是一个 对偶元组。
+2. 如果两个集合个数不对应，会造成数据丢失。
+3. 集合不限于 List, 也可以是其它集合比如 Array
+4. 如果要取出合并后的各个对偶元组的数据，可以遍历
+5.    
+   
+   
+##11.8 扩展-迭代器
+###11.8.1 基本说明
+1. 通过 iterator 方法从集合获得一个迭代器，
+    通过 while 循环和 for 表达式对集合进行遍历.(学习使用 迭代器来遍历)   
+ ###11.8.3 对代码小结
+ ```scala
+def iterator: Iterator[A] = new AbstractIterator[A] { var these = self
+def hasNext: Boolean = !these.isEmpty
+def next(): A =
+
+```   
+1.    iterator 的构建实际是 AbstractIterator 的一个匿名子类，该子类提供了 
+2. 该 AbstractIterator 子类提供了 hasNext next 等方法.
+3. 因此，我们可以使用 while 的方式，使用 hasNext next 方法变量
+
+
+##11.9 扩展-流 Stream
+###11.9.1 基本说明
+1. stream 是一个集合。这个集合，可以用于存放无穷多个元素，但是这无穷个元素并不会一次性生 产出来，
+    而是需要用到多大的区间，就会动态的生产，末尾元素遵循 lazy 规则(即:要使用结果才进行 计算的)     
+###11.9.2 创建 Stream 对象
+```scala
+def numsForm(n: BigInt) : Stream[BigInt] = n #:: numsForm(n + 1) val stream1 = numsForm(1)
+```
+1. Stream 集合存放的数据类型是 BigInt
+2. numsForm 是自定义的一个函数，函数名是程序员指定的。
+3. 创建的集合的第一个元素是 n , 后续元素生成的规则是 n + 1
+4. 后续元素生成的规则是可以程序员指定的 ，比如 numsForm( n * 4)...
+
+##11.10扩展-视图 View
+###11.10.1 基本介绍
+1. Stream 的懒加载特性，也可以对其他集合应用 view 方法来得到类似的效果，具有如下特点:
+2. view方法产出一个总是被懒执行的集合。
+3 .view不会缓存数据，每次都要重新计算，比如遍历View时。
+
+
+##11.11 扩展-并行集合
+###11.11.1 基本介绍
+1. Scala为了充分使用多核CPU，提供了并行集合(有别于前面的串行集合)，用于多核环境的 并行计算
+2. Divide and conquer : 分治算法，Scala 通过 splitters(分解器)，combiners(组合器)等抽象层来实现，
+   主要原理是将计算工作分解很多任务，分发给一些处理器去完成，并将它们处理结果合并返回
+3. Work stealin 算法【学数学】，主要用于任务调度负载均衡(load-balancing)，通俗点完成自己的 所有任务之后，发现其他人还有活没干完，主动(或被安排)帮他人一起干，这样达到尽早干完的目
+    的
+    
+ ##11.12扩展-操作符
+###11.12.2 操作符扩展
+1. 如果想在变量名、类名等定义中使用语法关键字(保留字)，可以配合反引号反引号 [案例演 示] val `val` = 42
+2. 中置操作符:A 操作符 B 等同于 A.操作符(B)
+3. 后置操作符:A 操作符 等同于 A.操作符，如果操作符定义的时候不带()则调用时不能加括号
+4. 前置操作符，+、-、!、~等操作符 A 等同于 A.unary_操作符
+5. 赋值操作符，A操作符=B等同于A=A操作符B ，比如A+=B等价A=A+B      
+
+##第 12 章模式匹配
+
+###12.1 match
+1. Scala 中的模式匹配类似于 Java 中的 switch 语法，但是更加强大。
+2. 模式匹配语法中，采用 match 关键字声明，每个分支采用 case 关键字进行声明，当需要匹配时，
+    会从第一个 case 分支开始，如果匹配成功，那么执行对应的逻辑代码，如果匹配不成功，
+    继续执行下 一个分支进行判断。如果所有 case 都不匹配，那么会执行 case _ 分支，
+    类似于 Java 中 default 语句。
+
+3.  match (类似 java switch) 和case 是关键字
+4. 如果匹配成功， 则 执行 => 后面的代码块.
+5. 匹配的顺序是从上到下，匹配到一个就执行对应的 代码
+6. => 后面的代码块 不要写 break ,会自动的退出 match 
+7.如果一个都没有匹配到，则执行 case _ 后面的代码块
+
+
+###12.1.3 match 的细节和注意事项
+1. 如果所有 case 都不匹配，那么会执行 case _ 分支，类似于 Java 中 default 语句
+2. 如果所有 case 都不匹配，又没有写 case _ 分支，那么会抛出 MatchError
+3. 每个 case 中，不用 break 语句，自动中断 case
+4. 可以在 match 中使用其它类型，而不仅仅是字符
+5. => 等价于 java swtich 的 :
+6. => 后面的代码块到下一个 case， 是作为一个整体执行，可以使用{} 扩起来，也可以不扩。
+
+
+##12.2 守卫
+###12.2.1 基本介绍
+1. 如果想要表达匹配某个范围的数据，就需要在模式匹配中增加条件守卫
+
+##12.3.1 基本介绍
+1。 如果在 case 关键字后跟变量名，那么 match 前表达式的值会赋给那个变量
+2. match 是一个表达式，因此可以有返回值
+3. 返回值就是匹配到的代码块的最后一句话的值
+
+##12.4 类型匹配
+###12.4.1 基本介绍
+1. 可以匹配对象的任意类型，这样做避免了使用 isInstanceOf 和 asInstanceOf 方法
+2. 在进行类型匹配时，编译器会预先检测是否有可能的匹配，如果没有则报错.
+
+###12.4.3 类型匹配注意事项
+1. Map[String, Int] 和 Map[Int, String]是两种不同的类型，其它类推。
+2. 在进行类型匹配时，编译器会预先检测是否有可能的匹配，如果没有则报错.
+3.如果 case _ 出现在 match 中间，则表示隐藏变量名，即不使用,而不是表示默认匹配
+4. casei:Int=>i 表示将 i=obj(其它类推)，然后再判断类型
+
+
+
+##12.5 匹配数组
+###12.5.1 基本介绍
+1. Array(0) 匹配只有一个元素且为 0 的数组。
+2. Array(x,y) 匹配数组有两个元素，并将两个元素赋值为 x 和 y。
+    当然可以依次类推 Array(x,y,z) 匹 配数组有 3 个元素的等等....
+3. Array(0,_*) 匹配数组以 0 开始
+
+
+##12.6 匹配列表
+```scala
+object MatchList {
+def main(args: Array[String]): Unit = {
+for (list <- Array(List(0), List(1, 0), List(88), List(0, 0, 0), List(1, 0, 0))) { val result = list match {
+case 0 :: Nil => "0" //
+case x :: y :: Nil => x + " " + y // case 0 :: tail => "0 ..." //
+case x :: Nil => x
+case _ => "something else" }
+//1. 0
+//2. 1 0
+//3. 0 ...
+//4. something else println(result)
+}
+
+```
+##12.7 匹配元组
+```scala
+def main(args: Array[String]): Unit = {
+//如果要匹配 (10, 30) 这样任意两个元素的对偶元组，应该如何写 for (pair <- Array((0, 1), (1, 0), (10, 30), (1, 1), (1, 0, 2))) {
+val result = pair match { //
+case (0, _) => "0 ..." //
+case (y, 0) => y //
+case (x, y) => (y, x) //"匹配到(x,y)" + x + " " + y
+case _ => "other" //. }
+//1. 0 ...
+//2. 1
+//3. other
+//4. other println(result)
+}
+
+```
+
+
+##12.8 对象匹配
+###12.8.1 基本介绍
+1. case中对象的unapply方法(对象提取器)返回Some集合则为匹配成功
+2. 返回 None 集合则为匹配失败
+
+```scala
+val number: Double = Square(5.0)// 36.0 //
+number match {
+//说明 case Square(n) 的运行的机制
+//1. 当匹配到 case Square(n)
+//2. 调用 Square 的 unapply(z: Double),z 的值就是 number
+//3. 如果对象提取器 unapply(z: Double) 返回的是 Some(6) ,则表示匹配成功，同时 // 将 6 赋给 Square(n) 的 n
+//4. 果对象提取器 unapply(z: Double) 返回的是 None ,则表示匹配不成功
+case Square(n) => println("匹配成功 n=" + n)
+case _ => println("nothing matched")
+}
+
+``` 
+``说明``
+```scala
+object Square { //说明
+//1. unapply 方法是对象提取器
+//2. 接收 z:Double 类型
+//3. 返回类型是 Option[Double]
+//4. 返回的值是 Some(math.sqrt(z)) 返回 z 的开平方的值，
+// 并放入到 Some(x) def unapply(z: Double): Option[Double] = {
+println("unapply 被调用 z 是=" + z) //Some(math.sqrt(z))
+None
+}
+def apply(z: Double): Double = z * z }
+
+```
+
+##12.10for 表达式中的模式
+###12.10.1 基本介绍
+1. for 循环也可以进行模式匹配.
+```scala
+val map = Map("A" -> 1, "B" -> 0, "C" -> 3) for ((k, v) <- map) {
+println(k + " -> " + v) // 出来三个 key-value ("A"->1), ("B"->0), ("C"->3) }
+//说明 : 只遍历出 value =0 的 key-value ,其它的过滤掉 println("--------------(k, 0) <- map-------------------")
+for ((k, 0) <- map) {
+println(k + " --> " + 0) }
+//说明, 这个就是上面代码的另外写法, 只是下面的用法灵活和强大 println("--------------(k, v) <- map if v == 0-------------------")
+for ((k, v) <- map if v >= 1) {
+println(k + " ---> " + v) }
+```
+
+
+##12.11样例(模板)类
+###12.11.1 样例类快速入门
+```scala
+object CaseClassDemo01 {
+def main(args: Array[String]): Unit = {
+println("hello~~") }
+}
+abstract class Amount
+case class Dollar(value: Double) extends Amount
+case class Currency(value: Double, unit: String) extends Amount //样例类
+case object NoAmount extends Amount //样例类
+//类型(对象) =序列化(serializable)==>字符串(1.你可以保存到文件中【freeze】2.反序列化,2 网络传
+输)
+```
+
+###12.11.2 基本介绍
+1. 样例类仍然是类
+2. 样例类用 case 关键字进行声明。
+3. 样例类是为模式匹配而优化的类
+4. 构造器中的每一个参数都成为 val——除非它被显式地声明为 var(不建议这样做)
+5. 在样例类对应的伴生对象中提供 apply 方法让你不用 new 关键字就能构造出相应的对象
+6. 提供 unapply 方法让模式匹配可以工作
+7. 将自动生成 toString、equals、hashCode 和 copy 方法(有点类似模板类，直接给生成，供程序 员使用)
+8. 除上述外，样例类和其他类完全一样。你可以添加方法和字段，扩展它们
+
+
+
+##12.12case 语句的中置(缀)表达式
+###12.12.1 基本介绍
+1. 什么是中置表达式?1 + 2，这就是一个中置表达式。
+    如果 unapply 方法产出一个元组，你可以在 case 语句中使用中置表示法。比如可以匹配一个 List 序列
+
+```scala
+List(1, 3, 5, 9) match { //修改并测试
+//1.两个元素间::叫中置表达式,至少 first，second 两个匹配才行.
+//2.first 匹配第一个 second 匹配第二个, rest 匹配剩余部分(5,9)
+case first :: second :: rest => 
+println(first + " " + second + " "+ rest.length + " " + rest) 
+// case _ => println("匹配不到...")
+```
+
+##12.13匹配嵌套结构
+###12.13.1 基本介绍
+1. 操作原理类似于正则表达式
+
+```scala
+abstract class Item // 项
+case class Book(description: String, price: Double) extends Item
+ case class Food(description: String, price: Double) extends Item
+ //Bundle 捆 ， discount: Double 折扣 ， item: Item* ,
+ case class Bundle(description: String, discount: Double, item: Item*) extends Item
+ 
+ 
+ valsale=Bundle("书籍",10, Book("漫画",40),Bundle("文学作品",20,Book("《阳关》",80),Book(" 《围城》", 30)))
+ //知识点 1 - 使用 case 语句，得到 "漫画" val res = sale match {
+ //如果我们进行对象匹配时，不想接受某些值，则使用_ 忽略即可，_* 表示所有
+ case Bundle(_, _, Book(desc, _), _*) => desc }
+ println("res=" + res) //
+//知识点 2-通过@表示法将嵌套的值绑定到变量。_*绑定剩余 Item 到 rest
+val res2 = sale match {
+//如果我们进行对象匹配时，不想接受某些值，则使用_ 忽略即可，_* 表示所有 case Bundle(_, _, art @ Book(_, _), rest @ _*) => (art, rest)
+}
+println("res2=" + res2)
+
+//知识点 3-不使用_*绑定剩余 Item 到 rest
+val res3 = sale match {
+//如果我们进行对象匹配时，不想接受某些值，则使用_ 忽略即可，_* 表示所有 case Bundle(_, _, art3 @ Book(_, _), rest3) => (art3, rest3)
+}
+println("res3=" + res3) 
+ 
+```
+```scala
+def price(it:Item): Double = { it match {
+case Book(_,p) => p
+case Bundle(_,disc,its @ _*) => its.map(price).sum - disc }
+}
+println("price=" + price(sale)) // 120
+```
+
+
+
+#第 13 章函数式编程高级
+##13.1 偏函数(partial function)
+
+###13.1.4 偏函数快速入门
+1. //1. PartialFunction[Any,Int] 表示偏函数接收的参数类型是 Any,返回类型是 Int
+2. isDefinedAt(x: Any) 如果返回 true ,就会去调用 apply 构建对象实例,如果是 false,过滤
+3. apply 构造器 ,对传入的值 + 1,并返回(新的集合)
+```scala
+val partialFun = new PartialFunction[Any,Int] {
+override def isDefinedAt(x: Any) = { println("x=" + x)
+x.isInstanceOf[Int] }
+override def apply(v1: Any) = { println("v1=" + v1) v1.asInstanceOf[Int] + 1
+}
+
+```
+``说明；``
+1. 如果是使用偏函数，则不能使用 map,应该使用 collect
+####//说明一下偏函数的执行流程
+1. 遍历 list 所有元素
+2. 然后调用 val element = if(partialFun-isDefinedAt(list 单个元素)) {partialFun-apply(list 单个元
+   素) }
+3. 每得到一个 element,放入到新的集合，最后返回
+
+
+###13.1.5 偏函数的小结
+1) 使用构建特质的实现类(使用的方式是 PartialFunction 的匿名子类)
+2) PartialFunction 是个特质(看源码)
+3) 构建偏函数时，参数形式 [Any, Int]是泛型，第一个表示参数类型，第二个表示返回参数
+4) 当使用偏函数时，会遍历集合的所有元素，编译器执行流程时先执行 isDefinedAt()如果为 true ,
+就会执行 apply, 构建一个新的 Int 对象返回
+5) 执行 isDefinedAt() 为 false 就过滤掉这个元素，即不构建新的 Int 对象.
+6) map函数不支持偏函数，因为map底层的机制就是所有循环遍历，无法过滤处理原来集合的元
+ 素
+7) collect函数支持偏函数
+
+
+###13.1.6 偏函数的简写形式
+```scala
+//可以将前面的案例的偏函数简写
+def partialFun2: PartialFunction[Any,Int] = {
+//简写成 case 语句
+case i:Int => i + 1
+case j:Double => (j * 2).toInt
+}
+val list = List(1, 2, 3, 4, 1.2, 2.4, 1.9f, "hello") 
+val list2 = list.collect(partialFun2) 
+println("list2=" + list2)
+
+
+//第二种简写形式
+val list3 = list.collect{
+case i:Int => i + 1
+case j:Double => (j * 2).toInt case k:Float => (k * 3).toInt
+}
+println("list3=" + list3) // (2,3,4,5)
+}
+
+```
+##13.2 作为参数的函数
+###13.2.1 基本介绍
+1. 函数作为一个变量传入到了另一个函数中，那么该作为参数的函数的类型是:function1，即:(参 数类型) => 返回类型
+
+
+
+##13.3 匿名函数
+###13.3.1 基本介绍
+1. 没有名字的函数就是匿名函数，可以通过函数表达式来设置匿名函数
+```scala
+//对匿名函数的说明
+//1. 不需要写 def 函数名
+//2. 不需要写返回类型，使用类型推导 
+// 3. = 变成 =>
+//4. 如果有多行，则使用{} 包括
+def main(args: Array[String]): Unit = {
+val triple = (x: Double) => {
+println("x=" + x)
+3*x 
+}
+println("triple" + triple(3))
+ // 9.0
+```
+
+
+
+##13.4 高阶函数
+###13.4.1 基本介绍
+1. 能够接受函数作为参数的函数，叫做高阶函数 (higher-order function)。可使应用程序更加健壮。
+
+###13.4.3 高阶函数可以返回函数类型
+```scala
+def main(args: Array[String]): Unit = {
+//说明
+//1. minusxy 是高阶函数,因为它返回匿名函数 //2. 返回的匿名函数 (y: Int) => x - y
+//3. 返回的匿名函数可以使用变量接收
+def minusxy(x: Int) = {
+(y: Int) => x - y //匿名函数 }
+//分步执行
+//f1 就是 (y:Int)=>3-y 
+// val f1 = minusxy(3) 
+// println("f1 的类型=" + f1) 
+// println(f1(1)) // 2 
+// println(f1(9)) // -6
+//也可以一步到位的调用 
+// println(minusxy(4)(9)) // -5
+
+}
+```
+
+##13.5 参数(类型)推断
+###13.5.1 基本介绍
+1. 参数推断省去类型信息(在某些情况下[需要有应用场景]，
+    参数类型是可以推断出来的，如 list=(1,2,3) list.map() map 中函数参数类型是可以推断的)，
+    同时也可以进行相应的简写。
+
+###13.5.2 参数类型推断写法说明
+1. 参数类型是可以推断时，可以省略参数类型
+2. 当传入的函数，只有单个参数时，可以省去括号
+3. 当传入的函数，只有单个参数时，可以省去括号
+
+##13.6 闭包(closure)
+###13.6.1 基本介绍
+1. 基本介绍:闭包就是一个函数和与其相关的引用环境组合的一个整体(实体)。
+
+```scala
+def minusxy(x: Int) = (y: Int) => x - y
+//f 函数就是闭包.
+val f = minusxy(20) 
+println("f(1)=" + f(1)) // 19
+// println("f(2)=" + f(2)) // 18
+
+```
+
+对上面代码的小结和说明 1) 
+第1点 (y:Int)=>x – y
+    返回的是一个匿名函数 ，因为该函数引用到到函数外的 x,那么 该函数和 x 整体形成一个闭包 如:这里 val f = minusxy(20) 的 f 函数就是闭包
+2) 你可以这样理解，返回函数是一个对象，而 x 就是该对象的一个字段，他们共同形成一个闭包 
+3) 当多次调用 f 时(可以理解多次调用闭包)，发现使用的是同一个 x, 所以 x 不变。
+4) 在使用闭包时，主要搞清楚返回函数引用了函数外的哪些变量，因为他们会组合成一个整体(实 体),形成一个闭包
+
+
+##13.7 函数柯里化最佳实践
+###13.7.1 基本介绍
+1. 函数编程中，接受多个参数的函数都可以转化为接受单个参数的函数，这个转化过程就叫柯里 化
+2. 柯里化就是证明了函数只需要一个参数而已。其实我们刚才的学习过程中，已经涉及到了柯里 化操作
+3. 不用设立柯里化存在的意义这样的命题。柯里化就是以函数为主体这种思想发展的必然产生的 
+    结果。(即:柯里化是面向函数思想的必然产生结果)
+
+```scala
+def mul(x: Int, y: Int) = x * y 
+println(mul(10, 10))
+def mulCurry(x: Int) = (y: Int) => x * y 
+println(mulCurry(10)(9))
+def mulCurry2(x: Int)(y:Int) = x * y 
+println(mulCurry2(10)(8))
+```
+
+###13.8.2 控制抽象基本介绍
+####控制抽象是这样的函数，满足如下条件
+1. 参数是函数
+2. 函数参数没有输入值也没有返回值
 
 
 
 
+##第 14 章使用递归的方式去思考,去编程
+###14.1 基本介绍
+Scala 是运行在 Java 虚拟机(Java Virtual Machine)之上，因此具有如下特点:
+1. 轻松实现和丰富的 Java 类库互联互通。
+2. 它既支持面向对象的编程方式，又支持函数式编程
+3. 它写出的程序像动态语言一样简洁，但事实上它确是严格意义上的静态语言
+4. Scala 就像一位武林中的集大成者，将过去几十年计算机语言发展历史中的精萃集于一身，化
+   繁为简，为程序员们提供了一种新的选择。设计者马丁·奥得斯基 
+    希望程序员们将编程作为简洁，高 效，令人愉快的工作。同时也让程序员们进行关于编程思想的新的思考
+
+###14.2 Scala 提倡函数式编程(递归思想)
+先说下编程范式:
+1. 在所有的编程范式中，面向对象编程(Object-Oriented Programming)无疑是最大的赢家。
+2. 但其实面向对象编程并不是一种严格意义上的编程范式，严格意义上的编程范式分为:命令式
+编程(Imperative Programming)、函数式编程(Functional Programming)
+    和逻辑式编程(Logic Programming)。面向对象编程只是上述几种范式的一个交叉产物，更多的还是继承了命令式编程的基 因。
+3. 在传统的语言设计中，只有命令式编程得到了强调，那就是程序员要告诉计算机应该怎么做。 
+    而递归则通过灵巧的函数定义，告诉计算机做什么。因此在使用命令式编程思维的程序中，
+    是现在多 数程序采用的编程方式，递归出镜的几率很少，而在函数式编程中，大家可以随处见到递归的方式。
 
 
 
+##第 15 章 项目-scala 客户信息管理系统
 
+
+
+##第 16 章并发编程模型 Akka
+###16.1 Akka 介绍
+1) Akka是JAVA虚拟机JVM平台上构建高并发、分布式和容错应用的工具包和运行时，你可以 理解成 Akka 是编写并发程序的框架。
+2) Akka用Scala语言写成，同时提供了Scala和JAVA的开发接口。
+3) Akka主要解决的问题是:可以轻松的写出高效稳定的并发程序，程序员不再过多的考虑线程、 锁和资源竞争等细节。
+
+##16.2 Actor 模型用于解决什么问题
+1) 处理并发问题关键是要保证共享数据的一致性和正确性，因为程序是多线程时，多个线程对同 一个数据进行修改，若不加同步条件，势必会造成数据污染。但是当我们对关键代码加入同步条件 synchronized 后，实际上大并发就会阻塞在这段代码，对程序效率有很大影响。
+2) 若是用单线程处理，不会有数据一致性的问题，但是系统的性能又不能保证。
+3) Actor 模型的出现解决了这个问题，简化并发编程，提升程序性能。你可以这里理解:Actor 模 型是一种处理并发问题的解决方案，很牛!
+
+阿斯顿
 
 
 
